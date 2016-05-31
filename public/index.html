@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Chat using node.js and socket.io</title>
+    <link rel = "stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <div id = "setNickName">
+      <form id = "setNickNameForm">
+        <p id = "nickNameError" class = "error"></p>
+        <p>Enter nick name</p>
+        <input type = "text" id = "nickName">
+        <input type = "submit" value = "Set Nick Name">
+      </form>
+    </div>
+
+    <div id = "contentWrapper" style = "display:none;">
+      <div id = "chatWrapper">
+        <p id = "sendMessageError" class = "error"></p>
+        <div id = "chat"></div>
+      </div>
+      <div id = "userList"></div>
+      <form id = "sendMessageFrom">
+        <input type = "text" id = "message" size = "35">
+        <input type = "submit">
+      </form>
+    </div>
+
+    <script src = "http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src = "/socket.io/socket.io.js"></script>
+
+    <script>
+      jQuery(function($){
+        var socket = io();
+        var nickName = null;
+
+        $('#setNickNameForm').submit(function(e){
+          e.preventDefault();
+          var data = {
+            nickName: $('#nickName').val()
+          };
+          socket.emit('set_nickName', data, function(response){
+            if(response.success){
+              nickName = response.data;
+              $('#nickName').val('');
+              $('#setNickName').hide();
+              $('#contentWrapper').show();
+            }else{
+              $('#nickNameError').html("Error: " + response.err);
+            }
+          });
+        });
+
+        $('#sendMessageFrom').submit(function(e){
+          e.preventDefault();
+          if(nickName != null){
+            var data = {
+              nickName: nickName,
+              message: $('#message').val()
+            };
+            socket.emit('send_message', data, function(response){
+              if(response.success){
+                $('#message').val('');
+                $('#sendMessageError').val('');
+              }else{
+                $('#sendMessageError').val(response.err);
+              }
+            });
+          }
+        });
+
+        socket.on("new_message", function(response){
+          $('#chatWrapper').append('<b>' + response.nickName + ':</b> ' + response.message + '<br>');
+        });
+
+        socket.on('users_online', function(response){
+          var html = '<p><b>Users Online</b></p>';
+          if(response.data.length){
+            for(var i = 0; i < response.data.length; i++){
+              html += '<p>' + response.data[i].nickName + '</p>';
+            }
+            $('#userList').html(html);
+          }
+        })
+      });
+    </script>
+  </body>
+</html>

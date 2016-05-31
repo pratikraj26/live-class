@@ -1,0 +1,19 @@
+{
+  "name": "Live-Class",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "socket.io": "1.4.6",
+    "express" : "4.13.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pratikraj26/live-class.git"
+  },
+  "author": "PratikRaj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pratikraj26/live-class/issues"
+  },
+  "homepage": "https://github.com/pratikraj26/live-class#readme"
+}

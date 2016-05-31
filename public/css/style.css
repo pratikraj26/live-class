@@ -1,0 +1,13 @@
+#contentWrapper{
+  max-width: 410px;
+}
+#chatWrapper,
+#userList{
+  height: 500px;
+  width: 200px;
+  float: left;
+  border: 1px solid #666;
+}
+.error{
+  color: red;
+}
